@@ -3,8 +3,8 @@
 #include <SDL.h>
 
 #include "graphics.h"
-#include "sprite.h"
 #include "animated_sprite.h"
+#include "input.h"
 
 namespace {
     const int kFps = 60; 
@@ -27,6 +27,7 @@ Game::~Game() {
 void Game::eventLoop() {
     Graphics graphics;
     SDL_Event event;
+    Input input;
 
     sprite_.reset(new AnimatedSprite("content/MyChar.bmp", 0, 0, kTileSize, kTileSize, 15, 3)); 
 
@@ -35,17 +36,24 @@ void Game::eventLoop() {
     while (running)
     {
         const int start_time_ms = SDL_GetTicks();
-       
+        input.beginNewFrame();
         while (SDL_PollEvent(&event))
         {
             switch (event.type)
             {
                 case SDL_KEYDOWN:
-                    if (event.key.keysym.sym == SDLK_ESCAPE) running = false;
+                    input.keyDownEvent(event);
+                    break;
+                case SDL_KEYUP:
+                    input.keyUpEvent(event);
                     break;
                 default:
                     break;
             }
+        }
+        
+        if (input.wasKeyPressed(SDLK_ESCAPE)) {
+            running = false;
         }
 
         const int current_time_ms = SDL_GetTicks();
