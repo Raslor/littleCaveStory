@@ -29,6 +29,10 @@ void Graphics::blitSurface(
 
 }
 
+void Graphics::clear() {
+    SDL_FillRect(screen_, NULL/*,  SDL_Surface* surface, SDL_Rect* destination_rectangle,*/, 0/* Uint32 Color*/);
+}
+
 void Graphics::flip() {
     SDL_Flip(screen_);
 }

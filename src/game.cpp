@@ -3,7 +3,7 @@
 #include <SDL.h>
 
 #include "graphics.h"
-#include "animated_sprite.h"
+#include "player.h"
 #include "input.h"
 
 namespace {
@@ -26,10 +26,10 @@ Game::~Game() {
 
 void Game::eventLoop() {
     Graphics graphics;
-    SDL_Event event;
     Input input;
+    SDL_Event event;
 
-    sprite_.reset(new AnimatedSprite("content/MyChar.bmp", 0, 0, kTileSize, kTileSize, 15, 3)); 
+    player_.reset(new Player(320, 240)); 
 
     bool running = true;
     int last_update_time = SDL_GetTicks(); 
@@ -56,6 +56,21 @@ void Game::eventLoop() {
             running = false;
         }
 
+        // if both left and right are being pressed
+        if (input.isKeyHeld(SDLK_LEFT) && input.isKeyHeld(SDLK_RIGHT)) {
+            // stop moving
+            player_->stopMoving();
+        } else if (input.isKeyHeld(SDLK_LEFT)) { // else if left
+            // startMovingLeft
+            player_->startMovingLeft();
+        } else if (input.isKeyHeld(SDLK_RIGHT)) { // else if right
+            // start startMovingRight
+            player_->startMovingRight();
+        } else { // else
+            // stopMoving
+            player_->stopMoving();
+        }
+
         const int current_time_ms = SDL_GetTicks();
         update(current_time_ms - last_update_time);
         last_update_time = current_time_ms;
@@ -64,19 +79,20 @@ void Game::eventLoop() {
         const int elapsed_time_ms = SDL_GetTicks() - start_time_ms;
         SDL_Delay(1000/*ms*/ / kFps/*fps*/ - elapsed_time_ms/*ms*/);
 
+    }
+
         // FPS Meter
         //const float seconds_per_frame = (SDL_GetTicks() - start_time_ms) / 1000.0; 
         //const float fps = 1 / (seconds_per_frame);
         //printf("fps=%f\n", fps);
-    }
-
 }
 
 void Game::update(int elapsed_time_ms) {
-    sprite_->update(elapsed_time_ms);
+    player_->update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics& graphics) {
-    sprite_->draw(graphics, 320, 240);
+    graphics.clear();
+    player_->draw(graphics);
     graphics.flip();
 }
