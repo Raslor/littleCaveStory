@@ -5,10 +5,7 @@
 
 class AnimatedSprite : public Sprite {
 public:
-    AnimatedSprite(
-            const std::string& file_path,
-            int source_x, int source_y,
-            int width, int height,
+    AnimatedSprite(Graphics& graphics, const std::string& file_path, int source_x, int source_y, int width, int height,
             int fps, int num_frames);
     
     void update(int elapsed_time_ms); 
