@@ -11,7 +11,7 @@ void Input::keyDownEvent(const SDL_Event& event){
 }
 
 void Input::keyUpEvent(const SDL_Event& event){
-    pressed_keys_[event.key.keysym.sym] = true;
+    released_keys_[event.key.keysym.sym] = true;
     held_keys_[event.key.keysym.sym] = false;
 }
 
