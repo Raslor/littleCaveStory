@@ -59,17 +59,25 @@ void Game::eventLoop() {
         // Player Horizontal Movement
         // if both left and right are being pressed
         if (input.isKeyHeld(SDLK_LEFT) && input.isKeyHeld(SDLK_RIGHT)) {
-            // stop moving
             player_->stopMoving();
         } else if (input.isKeyHeld(SDLK_LEFT)) { // else if left
-            // startMovingLeft
             player_->startMovingLeft();
         } else if (input.isKeyHeld(SDLK_RIGHT)) { // else if right
-            // start startMovingRight
             player_->startMovingRight();
         } else { // else
-            // stopMoving
             player_->stopMoving();
+        }
+        
+        // Player Vertical Movement
+        // if both left and right are being pressed
+        if (input.isKeyHeld(SDLK_UP) && input.isKeyHeld(SDLK_DOWN)) {
+            player_->lookHorizontal();
+        } else if (input.isKeyHeld(SDLK_UP)) { // else if left
+            player_->lookUp();
+        } else if (input.isKeyHeld(SDLK_DOWN)) { // else if right
+            player_->lookDown();
+        } else { // else
+            player_->lookHorizontal();
         }
 
         // Player Jump

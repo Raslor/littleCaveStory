@@ -13,7 +13,7 @@ Graphics::Graphics() {
             kScreenWidth,
             kScreenWidth,
             kBitsPerPixel,
-            SDL_RESIZABLE);
+            0);
 }
 
 Graphics::~Graphics() {
