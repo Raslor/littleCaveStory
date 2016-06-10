@@ -3,6 +3,7 @@
 
 #include <boost/scoped_ptr.hpp>
 
+class Map;
 class Player;
 class Graphics;
 
@@ -18,6 +19,7 @@ private:
     void draw(Graphics& graphics);
 
     boost::scoped_ptr<Player> player_;
+    boost::scoped_ptr<Map> map_;
 };
 
 #endif // GAME_H_

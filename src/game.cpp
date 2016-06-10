@@ -4,6 +4,7 @@
 
 #include "graphics.h"
 #include "player.h"
+#include "map.h"
 #include "input.h"
 
 namespace {
@@ -15,7 +16,6 @@ int Game::kTileSize = 32;
 
 Game::Game() {
     SDL_Init(SDL_INIT_EVERYTHING);
-    SDL_ShowCursor(SDL_DISABLE);
     eventLoop();
 }
 
@@ -30,6 +30,7 @@ void Game::eventLoop() {
     SDL_Event event;
 
     player_.reset(new Player(graphics, 320, 240)); 
+    map_.reset(Map::createTestMap(graphics));
 
     bool running = true;
     int last_update_time = SDL_GetTicks(); 
@@ -88,12 +89,17 @@ void Game::eventLoop() {
         }
 
         const int current_time_ms = SDL_GetTicks();
+        
         update(current_time_ms - last_update_time);
         last_update_time = current_time_ms;
 
         draw(graphics);
+        
+        const int ms_per_frame = 1000/*ms*/ / kFps;
         const int elapsed_time_ms = SDL_GetTicks() - start_time_ms;
-        SDL_Delay(1000/*ms*/ / kFps/*fps*/ - elapsed_time_ms/*ms*/);
+        
+        if (elapsed_time_ms < ms_per_frame)
+            SDL_Delay(ms_per_frame - elapsed_time_ms/*ms*/);
 
     }
 
@@ -105,10 +111,12 @@ void Game::eventLoop() {
 
 void Game::update(int elapsed_time_ms) {
     player_->update(elapsed_time_ms);
+    map_->update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics& graphics) {
     graphics.clear();
     player_->draw(graphics);
+    map_->draw(graphics);
     graphics.flip();
 }
