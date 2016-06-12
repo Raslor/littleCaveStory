@@ -11,6 +11,7 @@ class Sprite;
 class Player {
 
 public:
+
     Player(Graphics& graphics, int x, int y);
 
     void update(int elapsed_time_ms);
@@ -28,6 +29,7 @@ public:
     void stopJump();
 
 private:
+
     enum MotionType {
         FIRST_MOTION_TYPE,
         STANDING = FIRST_MOTION_TYPE,
@@ -55,6 +57,7 @@ private:
     class SpriteState {
     
     public:
+
         SpriteState(MotionType motion_type=STANDING, 
                     HorizontalFacing horizontal_facing=LEFT, 
                     VerticalFacing vertical_facing=HORIZONTAL) :
@@ -68,6 +71,7 @@ private:
         MotionType motion_type;
         HorizontalFacing horizontal_facing;
         VerticalFacing vertical_facing;
+
     };
     friend bool operator<(const SpriteState& a, const SpriteState& b);
 
@@ -78,7 +82,9 @@ private:
     bool on_ground() const { return on_ground_; }
 
     class Jump {
+    
     public:
+
         Jump() : time_remaining_ms_(0), active_(false) {}
         
         void update(int elapsed_time_ms);
@@ -87,9 +93,12 @@ private:
         void reactivate() { active_ = time_remaining_ms_ > 0; }
         void deactivate() { active_ = false; }
         bool active() const { return active_; }
+    
     private:
+
         int time_remaining_ms_;
         bool active_;
+
     };
 
     int x_, y_;
@@ -101,6 +110,7 @@ private:
     Jump jump_;
 
     std::map<SpriteState, boost::shared_ptr<Sprite> > sprites_;
+
 };
 
 #endif // PLAYER_H_

@@ -41,17 +41,12 @@ namespace {
 }
 
 bool operator<(const Player::SpriteState& a, const Player::SpriteState& b) {
-    if (a.motion_type != b.motion_type) {
-        return a.motion_type < b.motion_type;
-    }
     
-    if (a.horizontal_facing != b.horizontal_facing) {
-        return a.horizontal_facing < b.horizontal_facing;
-    }
+    if (a.motion_type != b.motion_type) return a.motion_type < b.motion_type;
+    
+    if (a.horizontal_facing != b.horizontal_facing) return a.horizontal_facing < b.horizontal_facing;
 
-    if (a.vertical_facing != b.vertical_facing) {
-        return a.vertical_facing < b.vertical_facing;
-    }
+    if (a.vertical_facing != b.vertical_facing) return a.vertical_facing < b.vertical_facing;
 
     return false;
 }
@@ -75,6 +70,7 @@ void Player::update(int elapsed_time_ms) {
 
     x_ += round(velocity_x_ * elapsed_time_ms);
     velocity_x_ += acceleration_x_ * elapsed_time_ms;
+    
     if (acceleration_x_ < 0.0f) {
         velocity_x_ = std::max(velocity_x_, -kMaxSpeedX);
     } else if (acceleration_x_ > 0.0f) {
@@ -84,9 +80,8 @@ void Player::update(int elapsed_time_ms) {
     }
 
     y_ += round(velocity_y_ * elapsed_time_ms);
-    if (!jump_.active()) {
-        velocity_y_ = std::min(velocity_y_ + kGravity * elapsed_time_ms, kMaxSpeedY);
-    }
+    
+    if (!jump_.active()) velocity_y_ = std::min(velocity_y_ + kGravity * elapsed_time_ms, kMaxSpeedY);
 
     // TODO: remove this hack
     if (y_ >= 320) {
@@ -128,11 +123,15 @@ void Player::lookHorizontal() {
 }
 
 void Player::startJump() {
-    if (on_ground()) {
+    if (on_ground())
+    {
         jump_.reset();
+
         // give ourselves an initial velocity up
         velocity_y_ = -kJumpSpeed;
-    } else if (velocity_y_ < 0.0f) { // else if we are mid jump
+    }
+    else if (velocity_y_ < 0.0f) // else if we are mid jump
+    { 
         jump_.reactivate();
     }
 }
@@ -148,16 +147,19 @@ void Player::initializeSprites(Graphics& graphics) {
     for (int motion_type = FIRST_MOTION_TYPE; motion_type < LAST_MOTION_TYPE; ++motion_type)
     {
         MotionType motion_value = static_cast<MotionType>(motion_type);
+        
         // for every horizotal_facing
         for (int horizontal_facing = FIRST_HORIZONTAL_FACING; horizontal_facing < LAST_HORIZONTAL_FACING ;
                 ++horizontal_facing)
         {
             HorizontalFacing horizontal_value = static_cast<HorizontalFacing>(horizontal_facing); 
+            
             // for every vertical_facing
             for (int vertical_facing = FIRST_VERTICAL_FACING; vertical_facing < LAST_VERTICAL_FACING ;
                     ++vertical_facing)
             {
                 VerticalFacing vertical_value = static_cast<VerticalFacing>(vertical_facing); 
+                
                 // Create a spriteState
                 // call initializeSprite with spriteState
                 initializeSprite(graphics, SpriteState(motion_value, horizontal_value, vertical_value));
@@ -168,7 +170,6 @@ void Player::initializeSprites(Graphics& graphics) {
 
 void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_state) {
 
-   
     // 
     int source_x;
 
@@ -194,6 +195,7 @@ void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_stat
         case LAST_MOTION_TYPE:
             break;
     }
+    
     source_x = sprite_state.vertical_facing == UP ?
         source_x + kUpFrameOffset*Game::kTileSize :
         source_x;
@@ -218,17 +220,20 @@ void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_stat
                 kBackFrame * Game::kTileSize :
                 kDownFrame * Game::kTileSize;
         }
+        
         // create an static sprite
-        sprites_[sprite_state]= 
+        sprites_[sprite_state] = 
             boost::shared_ptr<Sprite>(new Sprite(
                 graphics, 
                 kSpriteFilePath, 
                 source_x, source_y,
                 Game::kTileSize, Game::kTileSize));
     }
+
 }
 
 Player::SpriteState Player::getSpriteState() {
+    
     MotionType motion;
     
     if (on_ground()) {
@@ -251,10 +256,10 @@ void Player::Jump::reset() {
 
 
 void Player::Jump::update(int elapsed_time_ms) {
-    if (active_) {
+    if (active_)
+    {
         time_remaining_ms_ -= elapsed_time_ms;
-        if (time_remaining_ms_ <= 0) {
-            active_ = false;
-        }
+
+        if (time_remaining_ms_ <= 0) active_ = false;
     }
 }

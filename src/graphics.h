@@ -8,7 +8,9 @@ class SDL_Surface;
 class SDL_Rect;
 
 class Graphics {
+
 public:
+    
     typedef SDL_Surface* SurfaceID;
     
     Graphics();
@@ -23,11 +25,14 @@ public:
 
     void clear();
     void flip();
+
 private:
+    
     typedef std::map<std::string, SDL_Surface*> SpriteMap;
     SpriteMap sprite_sheets_;
 
-    SDL_Surface* screen_;   
+    SDL_Surface* screen_;
+
 };
 
 #endif // GRAPHICS_H_

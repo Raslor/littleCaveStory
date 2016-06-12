@@ -10,13 +10,19 @@ AnimatedSprite::AnimatedSprite(Graphics& graphics, const std::string& file_path,
     current_frame_(0),
     elapsed_time_(0)
 {
+    //
 }
 
 void AnimatedSprite::update(int elapsed_time_ms) {
+    
     elapsed_time_ += elapsed_time_ms;
-    if (elapsed_time_ > frame_time_) {
+    
+    if (elapsed_time_ > frame_time_)
+    {
+        
         ++current_frame_;
         elapsed_time_ = 0;
+        
         if (current_frame_ < num_frames_) {
             source_rect_.x += Game::kTileSize;
         } else {
@@ -24,6 +30,7 @@ void AnimatedSprite::update(int elapsed_time_ms) {
             current_frame_ = 0;
         }
     }
+
 }
     
 
